@@ -21,7 +21,7 @@ A user friendly interface to denoise rendered ray traced images using Nvidia Opt
  - You don't know how to use the denoise node in blender XD (and even if you do, this is easier).
 ### Features to be added:
 - [ ] Batch Processing.
-- [ ] Allow albedo and/or normal passing to the AI.
+- [x] ~~Allow albedo and/or normal passing to the AI~~.
 -------
 ![compare](https://user-images.githubusercontent.com/20252333/173801710-60e5b9e6-62d0-444b-8429-685a175dc03b.png)
 -------
