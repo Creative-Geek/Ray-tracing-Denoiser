@@ -12,8 +12,8 @@ from random import seed
 from random import randint
 #import speedtest_cli #causing confliction without console
 
-FORM_CLASS,_=loadUiType(path.join(path.dirname(__file__), "main.ui"))
-#from main import Ui_MainWindow as FORM_CLASS
+#FORM_CLASS,_=loadUiType(path.join(path.dirname(__file__), "main.ui"))
+from main import Ui_MainWindow as FORM_CLASS
 
 
 
@@ -39,6 +39,8 @@ class MainWindow(QMainWindow, FORM_CLASS):
     def HandleButtons(self):
         self.Start_PB.clicked.connect(self.StartFunc)
         self.Browse_PB.clicked.connect(self.openFileNameDialog)
+        self.Normal_PB.clicked.connect(self.openFileNameDialogNormal)
+        self.Albedo_PB.clicked.connect(self.openFileNameDialogAlbedo)
         self.cls_PB.clicked.connect(self.closeApp)
         self.TestPB.clicked.connect(self.Testingfunc)
     
@@ -71,6 +73,23 @@ class MainWindow(QMainWindow, FORM_CLASS):
             
             if fileName:
                 self.input_SrcPth.setText(fileName)
+    
+    def openFileNameDialogAlbedo(self):
+            options = QFileDialog.Options()
+            #options |= QFileDialog.DontUseNativeDialog
+            fileName, _ = QFileDialog.getOpenFileName(self,"Choose an image", "","Image files (*.jpg *.gif *.png)", options=options)
+            
+            if fileName:
+                self.input_SrcPth_Alb.setText(fileName)
+                
+    
+    def openFileNameDialogNormal(self):
+            options = QFileDialog.Options()
+            #options |= QFileDialog.DontUseNativeDialog
+            fileName, _ = QFileDialog.getOpenFileName(self,"Choose an image", "","Image files (*.jpg *.gif *.png)", options=options)
+            
+            if fileName:
+                self.input_SrcPth_Nrm.setText(fileName)
 
 
     def keyPressEvent(self, event):
@@ -95,6 +114,8 @@ class MainWindow(QMainWindow, FORM_CLASS):
         self.label_Busy.show()
         #getting path from input:
         srcfile = self.input_SrcPth.text()
+        srcfile_alb = self.input_SrcPth_Alb.text()
+        srcfile_nrm = self.input_SrcPth_Nrm.text()
         #check for empty:
         if srcfile == "":
             self.label_Busy.hide()
@@ -136,13 +157,21 @@ class MainWindow(QMainWindow, FORM_CLASS):
         RPt = self.Repeat_spinBox.value()
         RPt = str(RPt)
         #compiling command 2 for cmd:
-        fullcmd2 = "".join(("Denoiser.exe -i " ,'"',srcfile,'"', " -repeat ",RPt," -o ",'"',outputdir,'"',))
+        if srcfile_alb =="" and srcfile_nrm == "":
+            fullcmd2 = "".join(("Denoiser.exe -i " ,'"',srcfile,'"', " -repeat ",RPt," -o ",'"',outputdir,'"',))
+        elif srcfile_alb != "" and srcfile_nrm == "":
+            fullcmd2 = "".join(("Denoiser.exe -i " ,'"',srcfile,'"', " -repeat ",RPt," -a ",'"',srcfile_alb,'"'," -o ",'"',outputdir,'"',))
+        elif srcfile_nrm != "" and srcfile_alb == "":
+            QMessageBox.critical(self, "Error", "Normal requires albedo")
+            return
+        else:
+            fullcmd2 = "".join(("Denoiser.exe -i " ,'"',srcfile,'"', " -repeat ",RPt," -a ",'"',srcfile_alb,'"'," -n ",'"',srcfile_nrm,'"'," -o ",'"',outputdir,'"',))
         #print (fullcmd1)
         #print (fullcmd2)
         self.label_Busy.show()
         #sending to cmd:
         sendcommand = "".join(('cmd /c ','"',fullcmd1," & ",fullcmd2))
-        print (sendcommand)
+        #print (sendcommand)
         os.system(sendcommand)
         self.label_Busy.hide()
 
