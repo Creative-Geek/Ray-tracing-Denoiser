@@ -1,10 +1,11 @@
 # Ray tracing Denoiser
 A user friendly interface to denoise rendered ray traced images using Nvidia Optix or Intel OID
 
-![screenshot](https://user-images.githubusercontent.com/20252333/173795343-c9ae5d0d-8eaa-4e1e-a80e-05b65fe8db0d.jpg)
+![screenshot](https://user-images.githubusercontent.com/20252333/185997472-aeac3cc2-ebf6-4387-9aa1-b77e3a3e3c17.png)
 
 ## Features:
  - You can repeat the process if necessary.
+ - You can pass the first sample albedo and normals to the AI for better results.
  - You can specify the result destination.
  - It's extremely easy to use.
  - Supports Nvidia Optix (much faster but needs a Maxwell Nvidia card) and Intel OID (works on CPUs as old as Core 2 Duo)
